@@ -38,15 +38,15 @@ def render(display: messages.message) -> rx.Component:
     message_box = rx.cond(
             sender == display.sender,
             rx.box(rx.text(display.content, style=styles.question_style),
-                    text_align="right",),
+                    align="right", margin_y="1em"),
             rx.box(rx.text(display.content, style=styles.answer_style),
-                    text_align="left",)
+                    align="left", margin_y="1em")
             )
-    return rx.box(message_box, margin_y="1em")
+    return message_box#, margin_y="1em")
 
 
 
-@template(route="/chatroom",title="Chatroom", on_load=messages.QueryMessage.retrieve_messages(sender,recipient))
+@template(route="/chatroom",title="Chatroom", on_load=messages.QueryMessage.retrieve_messages('dummy1','dummy2'))
 def chatroom() -> rx.Component:
     return rx.center(
         rx.vstack(

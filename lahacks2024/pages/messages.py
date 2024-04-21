@@ -16,28 +16,21 @@ class QueryMessage(rx.State):
     messages: list[message] = []
 
     def send_message(self, user: str, recipient: str, content: str):
-        return rx.window_alert("hasdai")
         ordered = sorted([user,recipient])
         convoid = ''.join(ordered)
         with rx.session() as session: #add message to table, want to update state of the table
             #when state of table is updated, 
             session.add(
                 message(
-                    sender = 'user',
-                    recipient = 'recipient',
-                    convo_id = 'convoid',
-                    content = 'content',
-                    timestamp = datetime.datetime.now()
+                    sender = user,
+                    recipient = recipient,
+                    convo_id = convoid,
+                    content = content,
+                    timestamp = datetime.now()
                 )
-                # message(
-                #     sender = user,
-                #     recipient = recipient,
-                #     convo_id = convoid,
-                #     content = content,
-                #     timestamp = datetime.datetime.now()
-                # )
             )
             session.commit()
+        return rx.redirect('/chatroom')
 
     def retrieve_messages(self, user: str, recipient: str):
         ordered = sorted([user,recipient])
@@ -49,3 +42,4 @@ class QueryMessage(rx.State):
                 )
             ).all()
         self.messages = messages
+        print(self.messages)
