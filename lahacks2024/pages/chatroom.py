@@ -6,6 +6,7 @@ from ..backend.user import User
 from ..backend.message import Message
 from datetime import datetime
 from sqlmodel import or_, and_
+from . import gemini
     
 
 class ChatRoomState(rx.State):
@@ -56,6 +57,9 @@ class ChatRoomState(rx.State):
                 )
             ).all()
 
+        for msg in messages:
+            if msg.recipient == self.curr_sender.persistent_id:
+                msg.content = gemini.translate(msg.content,self.curr_sender.language)
         self.messages = messages
 
 
