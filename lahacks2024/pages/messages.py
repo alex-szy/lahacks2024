@@ -2,15 +2,9 @@ from . import gemini
 import reflex as rx
 from datetime import datetime
 from ..backend.user import User
+from ..backend.message import message
 from sqlmodel import Field
-class message(rx.Model, table=True):
-    # sender: str = Field(foreign_key= 'User.username')
-    # recipient: str = Field(foreign_key= 'User.username')
-    sender: str
-    recipient: str
-    convo_id: str
-    content: str
-    timestamp: datetime
+
 
 class QueryMessage(rx.State):
     messages: list[message] = []
