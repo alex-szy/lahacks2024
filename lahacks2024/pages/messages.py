@@ -6,6 +6,7 @@ from ..backend.message import message
 from sqlmodel import Field
 
 
+
 class QueryMessage(rx.State):
     messages: list[message] = []
 
@@ -35,5 +36,15 @@ class QueryMessage(rx.State):
                     message.convo_id == convoid
                 )
             ).all()
+        with rx.session() as session:
+            usr = session.exec(
+                User.select().where(
+                    User.username == user
+                )
+            ).first()
+        for msg in messages:
+            msg.content = gemini.translate(msg.content,usr.language)
         self.messages = messages
         print(self.messages)
+
+    
