@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 2e6e9ea8004c
+Revision ID: 588a01cd66cf
 Revises: 
-Create Date: 2024-04-21 02:56:56.848587
+Create Date: 2024-04-21 05:44:00.598914
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 import sqlmodel
 
 # revision identifiers, used by Alembic.
-revision: str = '2e6e9ea8004c'
+revision: str = '588a01cd66cf'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -24,8 +24,8 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('email', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('otp_hash', sa.LargeBinary(), nullable=False),
-    sa.Column('created', sa.DateTime(timezone=True), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=False),
-    sa.Column('expiration', sa.DateTime(timezone=True), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=False),
+    sa.Column('created', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('expiration', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('client_ip', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('recent_attempts', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id')
@@ -35,8 +35,8 @@ def upgrade() -> None:
     sa.Column('email', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('persistent_id', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('session_token', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('created', sa.DateTime(timezone=True), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=False),
-    sa.Column('expiration', sa.DateTime(timezone=True), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=False),
+    sa.Column('created', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('expiration', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_magiclinkauthsession_email'), 'magiclinkauthsession', ['email'], unique=False)

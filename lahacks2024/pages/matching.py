@@ -51,7 +51,7 @@ class MatchingState(rx.State):
         with rx.session() as session:
             self.connected_users = [list(row) for row in session.execute(
                 sqlalchemy.text(
-                    "SELECT * FROM user WHERE NOT user.username = :u AND user.username IN (SELECT message.sender FROM message WHERE message.sender = :u OR message.recipient = :u UNION SELECT message.recipient FROM message WHERE message.sender = :u OR message.recipient = :u)"
+                    'SELECT * FROM "user" WHERE NOT "username" = :u AND "username" IN (SELECT "sender" FROM "message" WHERE "sender" = :u OR "recipient" = :u UNION SELECT "recipient" FROM "message" WHERE "sender" = :u OR "recipient" = :u)'
                 ),
                 {"u": self.username}
             ).all()]
@@ -91,10 +91,12 @@ def match_box_connected_user(userList):
 
 def match_box(user: User):
     bio = f'Name: {user.name}, Age: {user.age}, Illness: {user.illness}, Language: {user.language}'
+    redirect_url = f'/chatroom/{MagicLinkAuthState.auth_session.persistent_id}+{user.persistent_id}'
     return rx.vstack(
         rx.button(
             bio,
-            border_radius="lg"
+            border_radius="lg",
+            on_click=rx.redirect(redirect_url)
         ),
         rx.spacer(),
         align_items="start"
