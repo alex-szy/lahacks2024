@@ -12,4 +12,4 @@ def translate(message, recipient_language='French'):
     response = model.generate_content(prompt)
     return response.text
 
-print(translate(message='The backpack is blue.', recipient_language='Japanese4ee'))
+# print(translate(message='The backpack is blue.', recipient_language='Japanese4ee'))

@@ -8,7 +8,7 @@ class User(rx.Model, table=True):
     age: int
     illness: str
     language: str
-    authrecord: int | None = Field(foreign_key="MagicLinkAuthRecord.id", unique=True)
+    authrecord: int
 
 
 class MatchingState(rx.State):

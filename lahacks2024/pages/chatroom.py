@@ -1,12 +1,13 @@
-import gemini
+from . import gemini
 import reflex as rx
-from chat_state import ChatState
+from .chat_state import ChatState
 from . import messages
 from lahacks2024 import styles
 from lahacks2024.templates import template
+from ..backend.user import User
 
-sender = "Dummy1"
-recipient = "Dummy2"
+sender = ChatState.sender
+recipient = ChatState.recipient
 def message_bar() -> rx.Component:
     return rx.hstack(
         rx.input(
@@ -22,17 +23,17 @@ def message_bar() -> rx.Component:
         ),
     )
 
-def message_display(self, sender, recipient) -> rx.Component:
-    conv_id = sorted(sender,recipient)
+def message_display() -> rx.Component:
+    # conv_id = sorted(sender,recipient)
     # def get_users(self):
-    display = messages.retrieve_messages(sender,recipient)
+    display = messages.QueryMessage.messages
     return rx.box(
         rx.foreach(
-          display, render
+          messages.QueryMessage.messages, render
         )
     )
 
-def render(display) -> rx.Component:
+def render(display: messages.message) -> rx.Component:
     # language = display.sender.language
     message_box = rx.cond(
             sender == display.sender,
@@ -43,11 +44,13 @@ def render(display) -> rx.Component:
             )
     return rx.box(message_box, margin_y="1em")
 
-@template(route="/chatroom",title="Chatroom")
+
+
+@template(route="/chatroom",title="Chatroom", on_load=messages.QueryMessage.retrieve_messages)
 def chatroom() -> rx.Component:
     return rx.center(
         rx.vstack(
-        message_display(sender, recipient),
+        message_display(),
         message_bar()
         )
     )
