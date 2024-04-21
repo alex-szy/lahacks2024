@@ -9,7 +9,8 @@ class message(rx.Model, table=True):
     timestamp: datetime
 
 def send_message(user, recipient, content):
-    with rx.session() as session:
+    with rx.session() as session: #add message to table, want to update state of the table
+        #when state of table is updated, 
         session.add(
             message(
                 sender = user,

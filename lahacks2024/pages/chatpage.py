@@ -26,7 +26,6 @@ def qa(question: str, answer: str) -> rx.Component:
         margin_y="1em",
     )
 
-
 def chat() -> rx.Component:
     return rx.box(
         rx.foreach(
@@ -37,6 +36,7 @@ def chat() -> rx.Component:
 
 
 def action_bar() -> rx.Component:
+# Whenever the send button is hit, the table is updated along with the state of the table
     return rx.hstack(
         rx.input(
             value=State.question,
