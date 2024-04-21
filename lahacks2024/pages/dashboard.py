@@ -47,7 +47,7 @@ class ProfileFormState(rx.State):
             user = session.exec(
                 select(User).where(User.persistent_id == authstate.auth_session.persistent_id)
             ).first()
-            sesh = session.exec(select(MagicLinkAuthSession).where(MagicLinkAuthSession.persistent_id == authstate.auth_session.persistent_id).first())
+            sesh = session.exec(select(MagicLinkAuthSession).where(MagicLinkAuthSession.persistent_id == authstate.auth_session.persistent_id)).first()
             if user:
                 user.name = form_data.get("name")
                 user.username = form_data.get("username")
