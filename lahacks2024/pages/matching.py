@@ -20,8 +20,15 @@ class MatchingState(rx.State):
     language: str
     current_user_illness: str
     current_user_age: int
-    users: list[User] = []
-    num_users: int
+    connected_users: list[User] = []
+    matching_users: list[User] = []
+
+    def get_connected_users(self) -> list[User]:
+        # with rx.session() as session:
+        #     self.connected_users = session.exec(
+
+        #     )
+        return
 
     def find_new_matches(self) -> list[User]:
         with rx.session() as session:
@@ -29,17 +36,16 @@ class MatchingState(rx.State):
             self.current_user_illness = ""
             self.current_user_age = 14
 
-            self.users = session.exec(
+            self.matching_users = session.exec(
                 User.select().where(
                     User.illness.contains(self.current_user_illness)
                 )
             ).all()
 
             # sort based on closeness score
-            self.users = sorted(
-                self.users, key = lambda user: abs(user.age - self.current_user_age)
+            self.matching_users = sorted(
+                self.matching_users, key = lambda user: abs(user.age - self.current_user_age)
             )
-            self.num_users = len(self.users)
 
     def add_user(self):
         """Add a user to the database."""
@@ -196,25 +202,83 @@ def navbar():
     )
 
 def match_box(user: User):
-    return rx.hstack(
-        rx.box(
-            user.name
+    bio = f'Name: {user.name}, Age: {user.age}, Illness: {user.illness}, Language: {user.language}'
+    return rx.vstack(
+        rx.button(
+            bio,
+            # on_click=lambda statement=statement, index=index: RoundState.reveal_statement_class(statement[0], index),
+            # bg=RoundState.half_truths_bg[statement[0]],
+            border_radius="lg",
+            # variant=rx.cond(
+            #     (RoundState.half_truths_bg[index] == "red") | (RoundState.half_truths_bg[index] == "green"), 
+            #     "unstyled", 
+            #     "solid"
+            # ),
+            # is_disabled=RoundState.half_truths_clicked[index],
+            # style={"_hover": {"bg": rx.cond(RoundState.half_truths_clicked[index], RoundState.half_truths_bg[index], "#ebedf0")}},
         ),
-        rx.box(
-            user.age
-        ),
-        rx.box(
-            user.illness
-        ),
-        rx.box(
-            user.language
+        rx.spacer(),
+        align_items="start"
+    )
+    # bio = f'Age: {user.age}, Illness: {user.illness}, Language: {user.language}'
+    # return rx.vstack(
+    #     rx.button(
+    #         rx.vstack(
+    #             rx.text(
+    #                 user.name,
+    #                 size="3",
+    #                 style=button_title_style
+    #             ),
+    #             rx.text(
+    #                 bio,
+    #                 size="1",
+    #                 style=button_body_style
+    #             ),
+    #             align_items="start",
+    #             spacing="1",
+    #             padding_y="3",
+    #             padding_right="3"
+    #         ),
+    #     # border=f"{'2px' if highlight_color != None else '0px'} solid {highlight_color}",
+    #     # class_name=styles.BOUNCEIN_ANIMATION if animated else None,
+    #     # on_click=rx.redirect(path=url, external=is_external)
+    #     ),
+    #     rx.spacer(),
+    #     align_items="start"
+    # )
+    # return rx.hstack(
+    #     rx.box(
+    #         user.name
+    #     ),
+    #     rx.box(
+    #         user.age
+    #     ),
+    #     rx.box(
+    #         user.illness
+    #     ),
+    #     rx.box(
+    #         user.language
+    #     )
+    # )
+
+
+def connected_list():
+    return rx.vstack(
+        rx.heading("Connected"),
+        rx.vstack(
+            rx.foreach(
+                MatchingState.connected_users, match_box
+            )
         )
     )
 
 def new_matches_list():
-    return rx.box(
-        rx.foreach(
-            MatchingState.users, match_box
+    return rx.vstack(
+        rx.heading("Matches"),
+        rx.vstack(
+            rx.foreach(
+                MatchingState.matching_users, match_box
+            )
         )
     )
     # return rx.fragment(
@@ -260,10 +324,10 @@ def new_matches_list():
 @template(route="/matching", title="Matching", on_load=MatchingState.on_load)
 def matching() -> rx.Component:
     return rx.box(
-        navbar(),
+        # navbar(),
         rx.box(
             new_matches_list(),
-            margin_top="calc(50px + 2em)",
+            # margin_top="calc(50px + 2em)",
             padding="4em",
         ),
         font_family="Inter",
