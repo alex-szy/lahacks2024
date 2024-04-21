@@ -15,6 +15,7 @@ class MatchingState(rx.State):
     age: int
     illness: str
     language: str
+    persistent_id: str
     current_user_username: str
     current_user_illness: str
     current_user_age: int
@@ -36,12 +37,14 @@ class MatchingState(rx.State):
                 self.age = user.age
                 self.illness = user.illness
                 self.language = user.language
+                self.persistent_id = user.persistent_id
             else:
                 self.name = ""
                 self.username = ""
                 self.age = 0
                 self.illness = ""
                 self.language = ""
+                self.persistent_id = ""
         self.on_load()
 
     def get_connected_users(self):
@@ -74,11 +77,13 @@ class MatchingState(rx.State):
         self.find_new_matches()
 
 def match_box_connected_user(userList):
-    bio = f'Name: {userList[0]}, Age: {userList[1]}, Illness: {userList[2]}, Language: {userList[3]}'
+    bio = f'Name: {userList[1]}, Age: {userList[2]}, Illness: {userList[3]}, Language: {userList[4]}'
+    redirect_url = f'/chatroom/{MagicLinkAuthState.auth_session.persistent_id}+{userList[5]}'
     return rx.vstack(
         rx.button(
             bio,
-            border_radius="lg"
+            border_radius="lg",
+            on_click=rx.redirect(redirect_url)
         ),
         rx.spacer(),
         align_items="start"
