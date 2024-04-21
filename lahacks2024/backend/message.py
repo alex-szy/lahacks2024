@@ -7,6 +7,5 @@ class Message(rx.Model, table=True):
     # recipient: str = Field(foreign_key= 'User.username')
     sender: str
     recipient: str
-    convo_id: str
     content: str
     timestamp: datetime

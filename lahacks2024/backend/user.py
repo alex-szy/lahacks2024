@@ -10,3 +10,4 @@ class User(rx.Model, table=True):
     illness: str
     language: str
     persistent_id: str = Field(primary_key=True)
+    email: str

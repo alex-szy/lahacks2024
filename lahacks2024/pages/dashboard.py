@@ -2,7 +2,7 @@
 from lahacks2024 import styles
 from lahacks2024.templates import template
 from sqlmodel import select
-from reflex_magic_link_auth import MagicLinkAuthState
+from reflex_magic_link_auth import MagicLinkAuthState, MagicLinkAuthSession
 from ..backend.user import User
 
 import reflex as rx
@@ -13,6 +13,7 @@ class ProfileFormState(rx.State):
     age: int | None
     illness: str
     language: str
+    email: str
 
     # Populate the form data
     async def load_user(self):
@@ -29,12 +30,14 @@ class ProfileFormState(rx.State):
                 self.age = user.age
                 self.illness = user.illness
                 self.language = user.language
+                self.email = user.email
             else:
                 self.name = ""
                 self.username = ""
                 self.age = None
                 self.illness = ""
                 self.language = ""
+                self.email = ""
 
     async def post_user(self, form_data):
         authstate = await self.get_state(MagicLinkAuthState)
@@ -44,6 +47,7 @@ class ProfileFormState(rx.State):
             user = session.exec(
                 select(User).where(User.persistent_id == authstate.auth_session.persistent_id)
             ).first()
+            sesh = session.exec(select(MagicLinkAuthSession).where(MagicLinkAuthSession.persistent_id == authstate.auth_session.persistent_id).first())
             if user:
                 user.name = form_data.get("name")
                 user.username = form_data.get("username")
@@ -60,7 +64,8 @@ class ProfileFormState(rx.State):
                         age=form_data.get("age"),
                         illness=form_data.get("illness"),
                         language=form_data.get("language"),
-                        persistent_id=authstate.auth_session.persistent_id
+                        persistent_id=authstate.auth_session.persistent_id,
+                        email=sesh.email
                     )
                 )
                 session.commit()
@@ -122,6 +127,7 @@ def profileform() -> rx.Component:
                 ),
                 name="language",
             ),
+            rx.text(f"Email: {ProfileFormState.email}"),
             rx.form.submit(
                 rx.button("Submit"),
                 as_child=True,

@@ -2,7 +2,6 @@
 from lahacks2024.pages import *
 from lahacks2024.templates import template
 from ..backend.user import User
-from ..backend.message import message
 from reflex_magic_link_auth import MagicLinkAuthState
 from sqlmodel import select
 import sqlalchemy
@@ -91,10 +90,12 @@ def match_box_connected_user(userList):
 
 def match_box(user: User):
     bio = f'Name: {user.name}, Age: {user.age}, Illness: {user.illness}, Language: {user.language}'
+    redirect_url = f'/chatroom/{MagicLinkAuthState.auth_session.persistent_id}+{user.persistent_id}'
     return rx.vstack(
         rx.button(
             bio,
-            border_radius="lg"
+            border_radius="lg",
+            on_click=rx.redirect(redirect_url)
         ),
         rx.spacer(),
         align_items="start"

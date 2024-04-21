@@ -5,6 +5,7 @@ from reflex_magic_link_auth import MagicLinkAuthState
 from ..backend.user import User
 from ..backend.message import Message
 from datetime import datetime
+from sqlmodel import or_, and_
     
 
 class ChatRoomState(rx.State):
@@ -43,15 +44,15 @@ class ChatRoomState(rx.State):
                 return rx.redirect('/')
         self.curr_sender = user
         self.curr_recipient = recipient
-        return self.retrieve_messages()
+        return ChatRoomState.retrieve_messages()
     
 
-    async def retrieve_messages(self):
+    def retrieve_messages(self):
         with rx.session() as session:
             messages = session.exec(
                 Message.select().where(
-                    (Message.sender == self.curr_sender.persistent_id and Message.recipient == self.curr_recipient.persistent_id)
-                    or (Message.sender == self.curr_recipient.persistent_id and Message.recipient == self.curr_sender.persistent_id)
+                    or_(and_(Message.sender == self.curr_sender.persistent_id, Message.recipient == self.curr_recipient.persistent_id),
+                     and_(Message.sender == self.curr_recipient.persistent_id, Message.recipient == self.curr_sender.persistent_id))
                 )
             ).all()
 
@@ -73,13 +74,13 @@ class ChatRoomState(rx.State):
                 )
             )
             session.commit()
-        return rx.redirect('/chatroom')
+        return rx.redirect('/chatroom/' + '+'.join([self.curr_sender.persistent_id, self.curr_recipient.persistent_id]))
     
 
 class MessageFormState(rx.State):
     async def handle_submit(self, form_data):
         chatroom = await self.get_state(ChatRoomState)
-        return chatroom.send_message(form_data.get('message'))
+        return await chatroom.send_message(form_data.get('message'))
 
 
 # Components
