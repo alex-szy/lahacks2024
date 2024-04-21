@@ -1,5 +1,6 @@
 alembic==1.13.1
 anyio==4.3.0
+bcrypt==4.1.2
 bidict==0.23.1
 build==1.2.1
 certifi==2024.2.2
@@ -48,6 +49,7 @@ readme_renderer==43.0
 redis==5.0.3
 reflex==0.4.8.post1
 reflex-hosting-cli==0.1.12
+reflex-magic-link-auth==0.0.3
 requests==2.31.0
 requests-toolbelt==1.0.0
 rfc3986==2.0.0
