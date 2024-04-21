@@ -1,6 +1,6 @@
 import reflex as rx
 import asyncio
-import messages
+from . import messages
 
 
 class ChatState(rx.State):
@@ -11,6 +11,6 @@ class ChatState(rx.State):
         self.input =""
     def send_clear(self, user, recipient):
         messages.send_message(user,recipient, self.input)
-        self.clear_text
+        self.clear_text()
 
 

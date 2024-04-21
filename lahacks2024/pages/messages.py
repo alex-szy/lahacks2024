@@ -21,3 +21,13 @@ def send_message(user, recipient, content):
             )
         )
         session.commit()
+
+def retrieve_messages(user,recipient):
+    convo_id = sorted(user,recipient)
+    with rx.session() as session:
+        messages = session.exec(
+            message.select().where(
+                message.convo_id == convo_id
+            )
+        ).all()
+    return messages
