@@ -1,5 +1,5 @@
 """The dashboard page."""
-
+from lahacks2024 import styles
 from lahacks2024.templates import template
 
 import reflex as rx
@@ -14,9 +14,6 @@ def dashboard() -> rx.Component:
     """
     return rx.vstack(
         rx.heading("Dashboard", size="8"),
-        rx.text("Welcome to Reflex!"),
-        rx.text(
-            "You can edit this page in ",
-            rx.code("{your_app}/pages/dashboard.py"),
-        ),
-    )
+        rx.text("Time Spent on Chatting"),
+        rx.text("14H 29M"),
+        )
