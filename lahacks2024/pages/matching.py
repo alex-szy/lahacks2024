@@ -2,16 +2,9 @@
 from lahacks2024.pages import *
 from lahacks2024.templates import template
 from ..backend.user import User
-from sqlmodel import select, Field
+from sqlmodel import select
 
 import reflex as rx
-
-# class User(rx.Model, table=True):
-#     username: str = Field(primary_key=True)
-#     name: str
-#     age: int
-#     illness: str
-#     language: str
 
 class MatchingState(rx.State):
     username: str

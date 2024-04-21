@@ -46,8 +46,8 @@ def menu_button() -> rx.Component:
     def visible_pages(authenticated):
         pages = get_decorated_pages()
         if authenticated:
-            return [page for page in pages if page["route"] in {"/logout", "/matching", "/profile"}]
-        return [page for page in pages if page["route"] == "/login"]
+            return [page for page in pages if page["route"] in {"/", "/logout", "/matching", "/dashboard"}]
+        return [page for page in pages if page["route"] in {"/", "/login"}]
     
     return rx.box(
         rx.menu.root(
