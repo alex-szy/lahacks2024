@@ -26,8 +26,8 @@ class ChatState(rx.State):
         self.input = new_text
     def clear_text(self):
         self.input =""
-    async def send_clear(self):
-        messages.QueryMessage.send_message(self.sender, self.recipient, self.input)
+    def send_clear(self):
+        messages.QueryMessage.send_message('dummy1', 'dummy2', self.input)
         self.clear_text()
 
 

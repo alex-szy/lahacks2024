@@ -7,7 +7,7 @@ class message(rx.Model, table=True):
     # sender: str = Field(foreign_key= 'User.username')
     # recipient: str = Field(foreign_key= 'User.username')
     sender: str
-    recipient: str 
+    recipient: str
     convo_id: str
     content: str
     timestamp: datetime
@@ -15,24 +15,32 @@ class message(rx.Model, table=True):
 class QueryMessage(rx.State):
     messages: list[message] = []
 
-    def send_message(self, user: User, recipient: User, content: str):
-        ordered = sorted([user.username,recipient.username])
+    def send_message(self, user: str, recipient: str, content: str):
+        return rx.window_alert("hasdai")
+        ordered = sorted([user,recipient])
         convoid = ''.join(ordered)
         with rx.session() as session: #add message to table, want to update state of the table
             #when state of table is updated, 
             session.add(
                 message(
-                    sender = user.username,
-                    recipient = recipient.username,
-                    convo_id = convoid,
-                    content = content,
+                    sender = 'user',
+                    recipient = 'recipient',
+                    convo_id = 'convoid',
+                    content = 'content',
                     timestamp = datetime.datetime.now()
                 )
+                # message(
+                #     sender = user,
+                #     recipient = recipient,
+                #     convo_id = convoid,
+                #     content = content,
+                #     timestamp = datetime.datetime.now()
+                # )
             )
             session.commit()
 
-    def retrieve_messages(self, user: User, recipient: User):
-        ordered = sorted([user.username,recipient.username])
+    def retrieve_messages(self, user: str, recipient: str):
+        ordered = sorted([user,recipient])
         convoid = ''.join(ordered)
         with rx.session() as session:
             messages = session.exec(

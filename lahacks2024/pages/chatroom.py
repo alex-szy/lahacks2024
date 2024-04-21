@@ -46,7 +46,7 @@ def render(display: messages.message) -> rx.Component:
 
 
 
-@template(route="/chatroom",title="Chatroom", on_load=messages.QueryMessage.retrieve_messages)
+@template(route="/chatroom",title="Chatroom", on_load=messages.QueryMessage.retrieve_messages(sender,recipient))
 def chatroom() -> rx.Component:
     return rx.center(
         rx.vstack(
