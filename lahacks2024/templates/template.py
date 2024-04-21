@@ -5,6 +5,7 @@ from __future__ import annotations
 from lahacks2024 import styles
 from lahacks2024.components.sidebar import sidebar
 from typing import Callable
+from reflex_magic_link_auth import MagicLinkAuthState
 
 import reflex as rx
 
@@ -40,6 +41,14 @@ def menu_button() -> rx.Component:
     """
     from reflex.page import get_decorated_pages
 
+    # If logged out, show login
+    # If logged in, chats, dashboard, logout
+    def visible_pages(authenticated):
+        pages = get_decorated_pages()
+        if authenticated:
+            return [page for page in pages if page["route"] in {"/logout", "/matching", "/profile"}]
+        return [page for page in pages if page["route"] == "/login"]
+    
     return rx.box(
         rx.menu.root(
             rx.menu.trigger(
@@ -48,15 +57,17 @@ def menu_button() -> rx.Component:
                     variant="soft",
                 )
             ),
-            rx.menu.content(
-                *[
+            rx.cond(
+                MagicLinkAuthState.session_is_valid,
+                rx.menu.content(*[
+                    menu_item_link(page["title"], page["route"]) 
+                    for page in visible_pages(True)
+                ]),
+                rx.menu.content(*[
                     menu_item_link(page["title"], page["route"])
-                    for page in get_decorated_pages()
-                ],
-                rx.menu.separator(),
-                menu_item_link("About", "https://github.com/reflex-dev"),
-                menu_item_link("Contact", "mailto:founders@=reflex.dev"),
-            ),
+                    for page in visible_pages(False)
+                ])
+            )
         ),
         position="fixed",
         right="2em",
@@ -109,7 +120,6 @@ def template(
 
         def templated_page():
             return rx.hstack(
-                sidebar(),
                 rx.box(
                     rx.vstack(
                         page_content(),
