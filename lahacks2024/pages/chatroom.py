@@ -34,7 +34,12 @@ def message_display() -> rx.Component:
     )
 
 def render(display: messages.message) -> rx.Component:
-    # language = display.sender.language
+    language = 'German'
+    # content = display.content.to_string()
+    # content = str(display.content)
+    # # print(type(content))
+    # print(content)
+    # translated = gemini.translate(content)
     message_box = rx.cond(
             sender == display.sender,
             rx.box(rx.text(display.content, style=styles.question_style),
@@ -42,6 +47,7 @@ def render(display: messages.message) -> rx.Component:
             rx.box(rx.text(display.content, style=styles.answer_style),
                     align="left", margin_y="1em")
             )
+    # print(gemini.translate(display.content))
     return message_box#, margin_y="1em")
 
 
