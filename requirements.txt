@@ -1,4 +1,5 @@
 alembic==1.13.1
+annotated-types==0.6.0
 anyio==4.3.0
 bcrypt==4.1.2
 bidict==0.23.1
@@ -49,15 +50,17 @@ platformdirs==4.2.0
 proto-plus==1.23.0
 protobuf==4.25.3
 psutil==5.9.8
+psycopg2-binary==2.9.9
 pyasn1==0.6.0
 pyasn1_modules==0.4.0
-psycopg2-binary==2.9.9
 pycparser==2.22
 pydantic==1.10.15
+pydantic_core==2.18.2
 Pygments==2.17.2
 pyparsing==3.1.2
 pyproject_hooks==1.0.0
 python-dateutil==2.9.0.post0
+python-dotenv==1.0.1
 python-engineio==4.9.0
 python-multipart==0.0.9
 python-socketio==5.11.2
