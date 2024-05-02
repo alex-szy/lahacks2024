@@ -20,3 +20,15 @@ To run the project in development mode, do:
 ```
 reflex run --loglevel debug
 ```
+# Features
+## Home page
+<img width="401" alt="image" src="./assets/image1.png">
+
+## Dashboard
+<img width="401" alt="image" src="./assets/image2.png">
+
+## Available matches
+<img width="401" alt="image" src="./assets/image3.png">
+
+## Chat room with translation service
+<img width="401" alt="image" src="./assets/image4.png">
