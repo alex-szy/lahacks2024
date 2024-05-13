@@ -3,7 +3,7 @@
 import reflex as rx
 from lahacks2024.templates import template
 from .index import LoginState
-from reflex_magic_link_auth import MagicLinkAuthState
+from reflex_magic_link_auth import MagicLinkAuthState, send_magic_link_mailgun
 
 class LoginPageState(rx.State):
     login_error: str = ""
@@ -26,7 +26,16 @@ class LoginPageState(rx.State):
             return
         yield rx.redirect("/check-email")
 
-        print(magic_link._get_magic_link(record, otp))
+        if self.is_prod_mode:
+            try:
+                send_magic_link_mailgun(
+                    record.email,
+                    magic_link._get_magic_link(record, otp),
+                )
+            except Exception as e:
+                print(e)
+        else:
+            print(magic_link._get_magic_link(record, otp))
 
 
 def login_controls() -> rx.Component:
